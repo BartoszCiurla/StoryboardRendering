@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
 
 namespace StoryboardRendering.Helper
@@ -12,7 +8,9 @@ namespace StoryboardRendering.Helper
         private Logger _logger = new Logger();
         private const int HorizontalScrollViewer = 0;
         private const int VerticalScrollViewer = 1;
-        private List<ScrollViewer> _scrollViewers;
+        private readonly List<ScrollViewer> _scrollViewers;
+        private ScrollViewer VerticalScroll => _scrollViewers[VerticalScrollViewer];
+        private ScrollViewer HorizontallScroll => _scrollViewers[HorizontalScrollViewer];
 
         public ScrollViewerManagement(List<ScrollViewer> scrollViewers)
         {
@@ -22,25 +20,38 @@ namespace StoryboardRendering.Helper
         public void UpdateVerticalLayout()
         {
             _logger.Log("Before update vertical layout\n"
-                + GetVerticalScroll().ActualHeight + " Height \n" +
-                + GetVerticalScroll().ScrollableHeight + " Scrollable height \n" +
-                + GetVerticalScroll().VerticalOffset + "Verticall offset \n");
+                + VerticalScroll.ActualHeight + " Height \n" +
+                +VerticalScroll.ScrollableHeight + " Scrollable height \n" +
+                +VerticalScroll.VerticalOffset + "Verticall offset \n");
 
-            GetVerticalScroll().UpdateLayout();
+            VerticalScroll.UpdateLayout();
 
             _logger.Log("After update vertical layout\n"
-                + GetVerticalScroll().ActualHeight + " Height \n" +
-                +GetVerticalScroll().ScrollableHeight + " Scrollable height \n" +
-                +GetVerticalScroll().VerticalOffset + "Verticall offset \n");
+                + VerticalScroll.ActualHeight + " Height \n" +
+                +VerticalScroll.ScrollableHeight + " Scrollable height \n" +
+                +VerticalScroll.VerticalOffset + "Verticall offset \n");
         }
 
-        private ScrollViewer GetVerticalScroll() => _scrollViewers[VerticalScrollViewer];
+        public void UpdateHorizontallLayout()
+        {
+            _logger.Log("Before update vertical layout\n"
+               + HorizontallScroll.ActualWidth + " Width \n" +
+               +HorizontallScroll.ScrollableWidth + " Scrollable Width \n" +
+               +HorizontallScroll.HorizontalOffset + " Horizontall offset \n");
+
+            HorizontallScroll.UpdateLayout();
+
+            _logger.Log("Before update vertical layout\n"
+               + HorizontallScroll.ActualWidth + " Width \n" +
+               +HorizontallScroll.ScrollableWidth + " Scrollable Width \n" +
+               +HorizontallScroll.HorizontalOffset + " Horizontall offset \n");
+        }
 
         public bool ScrollVerticallyToPage(int page)
         {
             bool ignoreNextVerticalScrolling = true;
-            bool changed = GetVerticalScroll().ChangeView(null,
-                page * GetVerticalScroll().ActualHeight, null, true);
+            bool changed = VerticalScroll.ChangeView(null,
+                page * VerticalScroll.ActualHeight, null, true);
             if (!changed)
             {
                 ignoreNextVerticalScrolling = false;
@@ -48,6 +59,16 @@ namespace StoryboardRendering.Helper
             return ignoreNextVerticalScrolling;
         }
 
-
+        public bool ScrollHorizontallyToPage(int page)
+        {
+            bool ignoreNextHorizontalScrolling = true;
+            bool changed = HorizontallScroll.ChangeView(page * HorizontallScroll.ActualWidth, 
+                null, null, true);
+            if (!changed)
+            {
+                ignoreNextHorizontalScrolling = false;
+            }
+            return ignoreNextHorizontalScrolling;
+        }
     }
 }

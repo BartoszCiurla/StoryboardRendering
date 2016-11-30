@@ -19,7 +19,7 @@ namespace StoryboardRendering.Helper
 
         private readonly List<Border> _sectionsPlaceHoldersContainer;
         private const int PrevSection = 0;
-        private const int NextSection = 1;
+        private const int NextSection = 2;
 
         public SectionsBuilder(List<Border> sectionsPlaceHoldersContainer, List<Border> slidesPlaceHoldersContainer)
         {
@@ -66,14 +66,44 @@ namespace StoryboardRendering.Helper
             return BuildCurrentSectionNextSlide(nextSlide);
         }
 
-        private void MoveContent(Border from, Border to)
+        public bool RebuildSectionsAfterSetPrevSection(SlideViewModel currentSectionPrevSlide,
+        SlideViewModel currentSectionNextSlide,
+        SlideViewModel prevSectionSlide)
         {
+            //current -> next section 
+            bool nextSectionContentIsEmpty = MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],
+                _slidesPlaceHoldersContainer[NextSectionCurrSlide]);
+
+            SetVisibilityToSectionPlaceHolder(NextSection, nextSectionContentIsEmpty);
+
+            // prev section -> current
+            MoveContent(_slidesPlaceHoldersContainer[PrevSectionCurSlide],_slidesPlaceHoldersContainer[CurSectionCurSlide]);
+
+            //build prev
+            bool prevSlideExist = BuildCurrentSectionPrevSlide(currentSectionPrevSlide);
+
+            //build next
+            bool nextSlideExist = BuildCurrentSectionNextSlide(currentSectionNextSlide);
+
+            bool nextSectionExist = BuildPrevSection(prevSectionSlide);
+
+            return true;
+        }
+
+        private bool MoveContent(Border from, Border to)
+        {
+            bool contentIsEmpty = false;
             var content = from.Child as SlideViewer;
             from.Child = null;
 
+            if (content == null)
+                contentIsEmpty = true;
+
             to.Child = null;
-            to.Visibility = content == null? Visibility.Collapsed : Visibility.Visible;
-            to.Child = content;            
+            to.Visibility = contentIsEmpty ? Visibility.Collapsed : Visibility.Visible;
+            to.Child = content;
+
+            return contentIsEmpty;
         }
 
         private bool ItWasBuilt(SlideViewModel slide, int placeHolderIndex)
@@ -116,5 +146,6 @@ namespace StoryboardRendering.Helper
                 : Visibility.Collapsed;
             return itWasBuilt;
         }
+    
     }
 }

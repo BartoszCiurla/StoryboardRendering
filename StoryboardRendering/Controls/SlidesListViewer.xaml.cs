@@ -143,7 +143,7 @@ namespace StoryboardRendering.Controls
             string otherVersion3 = "Section 2, slide 2";
             string otherVersion4 = "Section 5, slide 0";
 
-            string otherVersion5 = "Section 0, slide 10";
+            string otherVersion5 = "Section 9, slide 9";
 
             string emptySlideId = "";
             #endregion todo remove after tests    
