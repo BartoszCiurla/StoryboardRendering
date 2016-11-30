@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Collections.Generic;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using StoryboardRendering.Helper;
 using StoryboardRendering.Models;
 
@@ -21,9 +11,7 @@ namespace StoryboardRendering.Controls
 {
     public sealed partial class SlidesListViewer : UserControl
     {
-        private Logger _logger = new Logger();
-
-        private SectionsManagement _sectionsManager;
+        private SectionsManager _sectionsManager;
         private Size _viewPortSize;
         private readonly List<Border> _sectionsPlaceHoldersContainer;
         private readonly List<Border> _slidesPlaceHoldersContainer;
@@ -149,7 +137,7 @@ namespace StoryboardRendering.Controls
             #endregion todo remove after tests    
 
             FillPlaceholdersSizes();
-            _sectionsManager = new SectionsManagement(SectionsList, otherVersion5);
+            _sectionsManager = new SectionsManager(SectionsList, emptySlideId);
             _sectionsManager
                 .Init(_sectionsPlaceHoldersContainer,
                 _slidesPlaceHoldersContainer,
@@ -158,7 +146,6 @@ namespace StoryboardRendering.Controls
 
         private void FillPlaceholdersSizes()
         {
-            //todo this may change
             _viewPortSize = new Size(HorizontalScrollViewer.ActualWidth, HorizontalScrollViewer.ActualHeight);
 
             _slidesPlaceHoldersContainer

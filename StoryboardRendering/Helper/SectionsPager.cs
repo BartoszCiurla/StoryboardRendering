@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StoryboardRendering.Models;
 
 namespace StoryboardRendering.Helper
 {
     public class SectionsPager
-    {
-        private Logger _logger = new Logger();
-
+    {        
         private readonly SlidesPager _slidesPager;
         private readonly List<SectionViewModel> _sections;
         private int? _prevSection;
@@ -35,22 +31,14 @@ namespace StoryboardRendering.Helper
 
         public void SetPrevSection()
         {
-            _logger.Log($"PREV SECTION: {_prevSection}");
-
             SetCurrentSectionAndRecalculate(_currentSection - 1);
-            _slidesPager.Init(_currentSection);
-
-            _logger.Log($"CURRENT SECTION AFTER CHANGE: {_currentSection}");
+            _slidesPager.Init(_currentSection);            
         }
 
         public void SetNextSection()
         {
-            _logger.Log($"NEXT SECTOIN: {_nextSection}");
-
             SetCurrentSectionAndRecalculate(_currentSection + 1);
             _slidesPager.Init(_currentSection);
-
-            _logger.Log($"CURRENT SECTION AFTER CHANGE: {_currentSection}");
         }
 
         public void SetPrevSlide()
@@ -61,21 +49,6 @@ namespace StoryboardRendering.Helper
         public void SetNextSlide()
         {
             _slidesPager.SetNextSlide();
-        }
-
-        public List<SlideViewModel> GetPrevSectionSlides()
-        {
-            return _prevSection.HasValue ? _slidesPager.GetSectionSlides((int)_prevSection) : GetEmptySection();
-        }
-
-        public List<SlideViewModel> GetCurrectSectionSlides()
-        {
-            return _slidesPager.GetSectionSlides(_currentSection);
-        }
-
-        public List<SlideViewModel> GetNextSectionSlides()
-        {
-            return _nextSection.HasValue ? _slidesPager.GetSectionSlides((int)_nextSection) : GetEmptySection();
         }
 
         public SlideViewModel GetPrevSectionSlide()
@@ -94,10 +67,6 @@ namespace StoryboardRendering.Helper
 
 
         public SlideViewModel GetCurrentSectionNextSlide() => _slidesPager.GetCurrentSectionNextSlide();
-
-        public int GetCurrentSlideIndex() => _slidesPager.CurrentSlideIndex;
-
-        private List<SlideViewModel> GetEmptySection() => new List<SlideViewModel> { null, null, null };
 
         private void SetCurrentSectionAndRecalculate(int current)
         {

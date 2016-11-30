@@ -4,14 +4,13 @@ using StoryboardRendering.Models;
 
 namespace StoryboardRendering.Helper
 {
-    public class SectionsManagement
+    public class SectionsManager
     {
-        private Logger _logger = new Logger();
         private readonly SectionsPager _sectionsPager;
-        private ScrollViewerManagement _scrollViewerManagement;
+        private ScrollViewerManager _scrollViewerManagement;
         private SectionsBuilder _sectionsBuilder;
 
-        public SectionsManagement(List<SectionViewModel> sections, string slideId = null)
+        public SectionsManager(List<SectionViewModel> sections, string slideId = null)
         {
             _sectionsPager = new SectionsPager(sections, slideId);
         }
@@ -25,7 +24,7 @@ namespace StoryboardRendering.Helper
             List<ScrollViewer> scrollViewers)
         {
             _sectionsBuilder = new SectionsBuilder(sectionsPlaceHoldersContainer, slidesPlaceHoldersContainer);
-            _scrollViewerManagement = new ScrollViewerManagement(scrollViewers);
+            _scrollViewerManagement = new ScrollViewerManager(scrollViewers);
             InitSections();
         }
 
@@ -33,13 +32,13 @@ namespace StoryboardRendering.Helper
         {
             _scrollViewerManagement.UpdateVerticalLayout();
 
-            bool prevSectionWasBuilt = _sectionsBuilder
+            bool prevSectionIsBuilt = _sectionsBuilder
                 .BuildPrevSection(_sectionsPager.GetPrevSectionSlide());
 
             _sectionsBuilder
                .BuildNextSection(_sectionsPager.GetNextSectionSlide());
 
-            bool prevSlideWasBuild =
+            bool prevSlideIsBuilt =
                 _sectionsBuilder
                 .BuildCurrentSectionPrevSlide(_sectionsPager.GetCurrentSectionPrevSlide());
 
@@ -50,20 +49,19 @@ namespace StoryboardRendering.Helper
             .BuildCurrentSectionNextSlide(_sectionsPager.GetCurrentSectionNextSlide());
 
 
-            if (prevSlideWasBuild)
+            if (prevSlideIsBuilt)
                 IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
 
-            if (prevSectionWasBuilt)
+            if (prevSectionIsBuilt)
                 IgnoreNextHorizontalScrolling = _scrollViewerManagement.ScrollHorizontallyToPage(1);
         }
 
         public void SetPrevSlide()
         {
-            _logger.Log("Try set prev slide");
             _sectionsPager.SetPrevSlide();
-            bool sectionisRebuild = _sectionsBuilder.RebuildCurrentSectionAfterSetPrevSlide(_sectionsPager.GetCurrentSectionPrevSlide());
+            bool prevSlideIsBuilt = _sectionsBuilder.RebuildCurrentSectionAfterSetPrevSlide(_sectionsPager.GetCurrentSectionPrevSlide());
 
-            if (sectionisRebuild)
+            if (prevSlideIsBuilt)
             {
                 IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
             }
@@ -71,7 +69,6 @@ namespace StoryboardRendering.Helper
 
         public void SetNextSlide()
         {
-            _logger.Log("Try set next slide");
             _sectionsPager.SetNextSlide();
 
             _sectionsBuilder.RebuildCurrentSectionAfterSetNextSlide(_sectionsPager.GetCurrentSectionNextSlide());
@@ -81,10 +78,9 @@ namespace StoryboardRendering.Helper
 
         public void SetPrevSection()
         {
-            _logger.Log("Try set prev section");
             _sectionsPager.SetPrevSection();
 
-            RebuildResult rebuildResult = _sectionsBuilder.RebuildSectionsAfterSetPrevSection(
+            RebuildSectionResult rebuildSectionResult = _sectionsBuilder.RebuildSectionsAfterSetPrevSection(
                 _sectionsPager.GetCurrentSectionPrevSlide(),
                 _sectionsPager.GetCurrentSectionNextSlide(), 
                 _sectionsPager.GetPrevSectionSlide());
@@ -92,12 +88,12 @@ namespace StoryboardRendering.Helper
             _scrollViewerManagement.UpdateHorizontallLayout();
             
 
-            if (rebuildResult.PrevSectionWasBuild)
+            if (rebuildSectionResult.PrevSectionIsBuilt)
                 IgnoreNextHorizontalScrolling = _scrollViewerManagement.ScrollHorizontallyToPage(1);
 
             _scrollViewerManagement.UpdateVerticalLayout();
 
-            if (rebuildResult.PrevSlideWasBuild)
+            if (rebuildSectionResult.PrevSlideIsBuilt)
                 IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
             else
             {
@@ -107,21 +103,20 @@ namespace StoryboardRendering.Helper
 
         public void SetNextSection()
         {
-            _logger.Log("Try set next section");
             _sectionsPager.SetNextSection();
 
-            RebuildResult rebuildResult = _sectionsBuilder.RebuildSectionsAfterSetNextSection(
+            RebuildSectionResult rebuildSectionResult = _sectionsBuilder.RebuildSectionsAfterSetNextSection(
                 _sectionsPager.GetCurrentSectionPrevSlide(),
                 _sectionsPager.GetCurrentSectionNextSlide(),
                 _sectionsPager.GetNextSectionSlide());
 
 
-            if (rebuildResult.PrevSectionWasBuild)
+            if (rebuildSectionResult.PrevSectionIsBuilt)
                 IgnoreNextHorizontalScrolling = _scrollViewerManagement.ScrollHorizontallyToPage(1);
 
             _scrollViewerManagement.UpdateVerticalLayout();
 
-            if (rebuildResult.PrevSlideWasBuild)
+            if (rebuildSectionResult.PrevSlideIsBuilt)
                 IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
             else
             {

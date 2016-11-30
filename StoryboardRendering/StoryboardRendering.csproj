@@ -101,11 +101,12 @@
     <Compile Include="Controls\SlideViewer.xaml.cs">
       <DependentUpon>SlideViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helper\ScrollViewerManagement.cs" />
+    <Compile Include="Helper\RebuildSectionResult.cs" />
+    <Compile Include="Helper\ScrollViewerManager.cs" />
     <Compile Include="Helper\SectionsBuilder.cs" />
-    <Compile Include="Helper\SectionsManagement.cs" />
+    <Compile Include="Helper\SectionsManager.cs" />
     <Compile Include="Helper\SectionsPager.cs" />
-    <Compile Include="Helper\SlidePerSectionHistory.cs" />
+    <Compile Include="Helper\SlidesHistoryManager.cs" />
     <Compile Include="Helper\SlidesPager.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MainPage.xaml.cs">

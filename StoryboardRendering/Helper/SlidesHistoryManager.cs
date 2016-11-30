@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StoryboardRendering.Helper
+﻿namespace StoryboardRendering.Helper
 {
-    public class SlidePerSectionHistory
+    public class SlidesHistoryManager
     {
         private readonly int?[] _history;
-        public SlidePerSectionHistory(int sectionsCount)
+        public SlidesHistoryManager(int sectionsCount)
         {
             _history = new int?[sectionsCount];
         }

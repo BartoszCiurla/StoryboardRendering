@@ -16,6 +16,6 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="White"                   
-                   FontSize="80" />
+                   FontSize="40" />
     </Grid>
 </UserControl>
