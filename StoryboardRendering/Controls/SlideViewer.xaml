@@ -15,7 +15,7 @@
         <TextBlock x:Name="SlideNameTextBlock"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
-                   Foreground="White"
-                   FontSize="30" />
+                   Foreground="White"                   
+                   FontSize="80" />
     </Grid>
 </UserControl>

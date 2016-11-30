@@ -31,8 +31,8 @@ namespace StoryboardRendering
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            ApplicationView.PreferredLaunchViewSize = new Size(300, 300);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            //ApplicationView.PreferredLaunchViewSize = new Size(300, 300);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
         }
 
         /// <summary>

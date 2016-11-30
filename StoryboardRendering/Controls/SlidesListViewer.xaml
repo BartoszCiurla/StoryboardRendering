@@ -21,7 +21,8 @@
         <StackPanel x:Name="HorizontalContainer" Orientation="Horizontal" HorizontalAlignment="Stretch">
 
             <!--PREV SECTION-->
-            <Border x:Name="PrevSection">
+            <Border x:Name="PrevSection" 
+                    VerticalAlignment="Stretch">
                 <ScrollViewer                        
                   VerticalScrollMode="Enabled"
                   VerticalSnapPointsType="Mandatory"
@@ -37,7 +38,8 @@
             </Border>
 
             <!--MAIN VERTICAL SECTION-->
-            <Border x:Name="CurSection">
+            <Border x:Name="CurSection"
+                    VerticalAlignment="Stretch">
                 <ScrollViewer            
                   x:Name="VerticalScrollViewer"
                   VerticalScrollMode="Enabled"
@@ -64,7 +66,8 @@
             </Border>
 
             <!--NEXT SECTION-->
-            <Border x:Name="NextSection">
+            <Border x:Name="NextSection"
+                    VerticalAlignment="Stretch">
                 <ScrollViewer         
                     x:Name="NextSectionScrollViewer"
                   VerticalScrollMode="Enabled"

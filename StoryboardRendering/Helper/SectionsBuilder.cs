@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StoryboardRendering.Controls;
@@ -45,11 +43,11 @@ namespace StoryboardRendering.Helper
         public bool RebuildCurrentSectionAfterSetPrevSlide(SlideViewModel prevSlide)
         {
             // move curent -> next
-            MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],_slidesPlaceHoldersContainer[CurSectionNextSlide]);
+            MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide], _slidesPlaceHoldersContainer[CurSectionNextSlide]);
 
             //move prev -> current 
             MoveContent(_slidesPlaceHoldersContainer[CurSectionPrevSlide], _slidesPlaceHoldersContainer[CurSectionCurSlide]);
-            
+
             //build prev
             return BuildCurrentSectionPrevSlide(prevSlide);
         }
@@ -57,54 +55,81 @@ namespace StoryboardRendering.Helper
         public bool RebuildCurrentSectionAfterSetNextSlide(SlideViewModel nextSlide)
         {
             //move current -> prev
-            MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],_slidesPlaceHoldersContainer[CurSectionPrevSlide]);
+            MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide], _slidesPlaceHoldersContainer[CurSectionPrevSlide]);
 
             //move next -> current
-            MoveContent(_slidesPlaceHoldersContainer[CurSectionNextSlide],_slidesPlaceHoldersContainer[CurSectionCurSlide]);
+            MoveContent(_slidesPlaceHoldersContainer[CurSectionNextSlide], _slidesPlaceHoldersContainer[CurSectionCurSlide]);
 
             //build next
             return BuildCurrentSectionNextSlide(nextSlide);
         }
 
-        public bool RebuildSectionsAfterSetPrevSection(SlideViewModel currentSectionPrevSlide,
+        public RebuildResult RebuildSectionsAfterSetPrevSection(SlideViewModel currentSectionPrevSlide,
         SlideViewModel currentSectionNextSlide,
         SlideViewModel prevSectionSlide)
         {
             //current -> next section 
-            bool nextSectionContentIsEmpty = MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],
+            bool contentIsFull = MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],
                 _slidesPlaceHoldersContainer[NextSectionCurrSlide]);
 
-            SetVisibilityToSectionPlaceHolder(NextSection, nextSectionContentIsEmpty);
+            SetVisibilityToSectionPlaceHolder(NextSection, contentIsFull);
 
             // prev section -> current
-            MoveContent(_slidesPlaceHoldersContainer[PrevSectionCurSlide],_slidesPlaceHoldersContainer[CurSectionCurSlide]);
+            MoveContent(_slidesPlaceHoldersContainer[PrevSectionCurSlide], _slidesPlaceHoldersContainer[CurSectionCurSlide]);
 
-            //build prev
+            //build prev slide
             bool prevSlideExist = BuildCurrentSectionPrevSlide(currentSectionPrevSlide);
 
-            //build next
-            bool nextSlideExist = BuildCurrentSectionNextSlide(currentSectionNextSlide);
+            //build next slide
+            BuildCurrentSectionNextSlide(currentSectionNextSlide);
 
-            bool nextSectionExist = BuildPrevSection(prevSectionSlide);
+            // build prev section 
+            bool prevSectionExist = BuildPrevSection(prevSectionSlide);
+            return new RebuildResult { PrevSectionWasBuild = prevSectionExist, PrevSlideWasBuild = prevSlideExist };
+        }
 
-            return true;
+        public RebuildResult RebuildSectionsAfterSetNextSection(SlideViewModel currentSectionPrevSlide, 
+            SlideViewModel currentSectionNextSlide, 
+            SlideViewModel nextSectionSlide)
+        {
+            //current -> prev section
+            bool contentIsFull = MoveContent(_slidesPlaceHoldersContainer[CurSectionCurSlide],
+                _slidesPlaceHoldersContainer[PrevSectionCurSlide]);
+
+            SetVisibilityToSectionPlaceHolder(PrevSection, contentIsFull);
+
+            //next section -> current
+            MoveContent(_slidesPlaceHoldersContainer[NextSectionCurrSlide],
+                _slidesPlaceHoldersContainer[CurSectionCurSlide]);
+
+            //build prev slide
+            bool prevSlideExist = BuildCurrentSectionPrevSlide(currentSectionPrevSlide);
+
+            //build next slide
+            BuildCurrentSectionNextSlide(currentSectionNextSlide);
+
+            //build next section
+            bool nextSectionExist = BuildNextSection(nextSectionSlide);
+            return new RebuildResult {PrevSectionWasBuild = contentIsFull,PrevSlideWasBuild = prevSlideExist};
         }
 
         private bool MoveContent(Border from, Border to)
         {
-            bool contentIsEmpty = false;
+            bool contentIsFull = false;
             var content = from.Child as SlideViewer;
             from.Child = null;
 
-            if (content == null)
-                contentIsEmpty = true;
+            if (content != null)
+                contentIsFull = true;
 
             to.Child = null;
-            to.Visibility = contentIsEmpty ? Visibility.Collapsed : Visibility.Visible;
+            to.Visibility = contentIsFull ? Visibility.Visible : Visibility.Collapsed;
             to.Child = content;
 
-            return contentIsEmpty;
+            return contentIsFull;
         }
+
+        
 
         private bool ItWasBuilt(SlideViewModel slide, int placeHolderIndex)
         {
@@ -119,7 +144,7 @@ namespace StoryboardRendering.Helper
         private void BuildSection(SlideViewModel slide, int placeHolderIndex)
         {
             var slidePlaceHolder = _slidesPlaceHoldersContainer[placeHolderIndex];
-            if(slidePlaceHolder != null)
+            if (slidePlaceHolder != null)
                 slidePlaceHolder.Child = new SlideViewer { SlideModel = slide };
         }
 
@@ -146,6 +171,11 @@ namespace StoryboardRendering.Helper
                 : Visibility.Collapsed;
             return itWasBuilt;
         }
-    
+    }
+
+    public class RebuildResult
+    {
+        public bool PrevSlideWasBuild { get; set; }
+        public bool PrevSectionWasBuild { get; set; }
     }
 }

@@ -34,14 +34,14 @@ namespace StoryboardRendering.Helper
 
         public void UpdateHorizontallLayout()
         {
-            _logger.Log("Before update vertical layout\n"
+            _logger.Log("Before update horizontal layout\n"
                + HorizontallScroll.ActualWidth + " Width \n" +
                +HorizontallScroll.ScrollableWidth + " Scrollable Width \n" +
                +HorizontallScroll.HorizontalOffset + " Horizontall offset \n");
 
             HorizontallScroll.UpdateLayout();
 
-            _logger.Log("Before update vertical layout\n"
+            _logger.Log("Before update horizontall layout\n"
                + HorizontallScroll.ActualWidth + " Width \n" +
                +HorizontallScroll.ScrollableWidth + " Scrollable Width \n" +
                +HorizontallScroll.HorizontalOffset + " Horizontall offset \n");

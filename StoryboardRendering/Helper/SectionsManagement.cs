@@ -82,15 +82,51 @@ namespace StoryboardRendering.Helper
         public void SetPrevSection()
         {
             _logger.Log("Try set prev section");
-            _sectionsPager.SetNextSection();
+            _sectionsPager.SetPrevSection();
 
-            _sectionsBuilder.RebuildSectionsAfterSetPrevSection(_sectionsPager.GetCurrentSectionPrevSlide(),
-                _sectionsPager.GetCurrentSectionNextSlide(), _sectionsPager.GetPrevSectionSlide());
+            RebuildResult rebuildResult = _sectionsBuilder.RebuildSectionsAfterSetPrevSection(
+                _sectionsPager.GetCurrentSectionPrevSlide(),
+                _sectionsPager.GetCurrentSectionNextSlide(), 
+                _sectionsPager.GetPrevSectionSlide());
+
+            _scrollViewerManagement.UpdateHorizontallLayout();
+            
+
+            if (rebuildResult.PrevSectionWasBuild)
+                IgnoreNextHorizontalScrolling = _scrollViewerManagement.ScrollHorizontallyToPage(1);
+
+            _scrollViewerManagement.UpdateVerticalLayout();
+
+            if (rebuildResult.PrevSlideWasBuild)
+                IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
+            else
+            {
+                IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(0);
+            }
         }
 
         public void SetNextSection()
         {
+            _logger.Log("Try set next section");
+            _sectionsPager.SetNextSection();
 
+            RebuildResult rebuildResult = _sectionsBuilder.RebuildSectionsAfterSetNextSection(
+                _sectionsPager.GetCurrentSectionPrevSlide(),
+                _sectionsPager.GetCurrentSectionNextSlide(),
+                _sectionsPager.GetNextSectionSlide());
+
+
+            if (rebuildResult.PrevSectionWasBuild)
+                IgnoreNextHorizontalScrolling = _scrollViewerManagement.ScrollHorizontallyToPage(1);
+
+            _scrollViewerManagement.UpdateVerticalLayout();
+
+            if (rebuildResult.PrevSlideWasBuild)
+                IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(1);
+            else
+            {
+                IgnoreNextVerticalScrolling = _scrollViewerManagement.ScrollVerticallyToPage(0);
+            }
         }
     }
 }
